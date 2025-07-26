@@ -1,0 +1,184 @@
+<style>
+    .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #c3e6cb;
+        font-weight: bold;
+    }
+    
+    .mailcial-form {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #fbf8f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .mailcial-form p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .mailcial-form label {
+        margin-left: 8px;
+        font-weight: 500;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .mailcial-form input[type="radio"],
+    .mailcial-form input[type="checkbox"] {
+        margin-right: 8px;
+    }
+
+    .mailcial-form input[type="text"],
+    .mailcial-form input[type="number"] {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 16px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+
+    .mailcial-form input[type="checkbox"],
+    .mailcial-form input[type="radio"] {
+        transform: scale(1.2);
+    }
+
+    .mailcial-form .submit-btn {
+        background-color: #e18325;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .mailcial-form .submit-btn:hover {
+        background-color: #e18325;
+    }
+
+    .mailcial-form br {
+        display: none;
+    }
+</style>
+
+<?php
+// Afficher un message de confirmation si le formulaire a été soumis avec succès
+if (isset($_GET['mail_sent_commercial']) || isset($_GET['mail_sent_client'])) {
+    echo '<div class="success-message">Votre demande a été traitée avec succès ! Un email de confirmation a été envoyé.</div>';
+}
+?>
+
+<form method="post" class="mailcial-form" action="<?php echo admin_url('admin-post.php'); ?>">
+
+
+    <p> Formulaire : <br>
+        <input type="radio" id="pergola" name="typeform" value="P" checked><label for="Pergola">Pergola</label>
+        <input type="radio" id="rideau" name="typeform" value="R"><label for="Rideau">Rideau</label>
+        <input type="radio" id="brisevue" name="typeform" value="B"><label for="Brise-Vue">Brise-Vue</label>
+        <input type="radio" id="pergola" name="typeform" value="S"><label for="Suspendre">Voile à suspendre</label>
+
+    </p>
+    <p>Quantité :
+        <input type="radio" name="quantite" id="q1" value="1" checked><label for="q1">1</label>
+        <input type="radio" name="quantite" id="q2" value="2"><label for="q2">2</label>
+        <input type="radio" name="quantite" id="q3" value="3"><label for="q3">3</label>
+        <input type="radio" name="quantite" id="q4" value="4"><label for="q4">3 ou plus</label>
+    </p>
+
+    <p> Pergola seulement : traverses <br>
+        <input type="radio" id="plus80cm" name="traverse" value="1" checked><label for="Oui plus de 80cm">Oui > 80cm</label>
+        <input type="radio" id="moin80cm" name="traverse" value="2"><label for="Oui moins de 80cm">Oui < 80cm</label>
+                <input type="radio" id="Aucune" name="traverse" value="3"><label for="Non">Non</label>
+
+    </p>
+
+    <p> Longueur :<input type="number" name="jot_longueur_client" value="4"> </p>
+    <p> Largeur :<input type="number" name="jot_largeur_client" value="3"> </p>
+
+
+    <p> Matière : <br>
+        <input type="radio" name="niveau" value="Un tissage souple : agréable au toucher (pouvoir occultant 1/5)" checked><label>Souple</label>
+        <input type="radio" name="niveau" value="Un tissage dense : pour une ombre naturelle (pouvoir occultant 3/5)"><label>Dense</label>
+        <input type="radio" name="niveau" value="Un tissage ultra dense : protection maximale (pouvoir occultant 5/5)"><label>Ultra Dense</label>
+
+    </p>
+    <p>Ourlet&nbsp;<input type="radio" name="ourlet" id="Oui" value="1">Oui<input type="radio" name="ourlet" id="Non" value="0" checked>Non</p>
+    <p>Premium&nbsp;<input type="radio" name="premium" id="Oui" value="1">Oui<input type="radio" name="premium" id="Non" value="0" checked>Non</p>
+    <p>Boucles (pour rideau)&nbsp;<input type="radio" name="boucles" id="Oui" value="1">Oui<input type="radio" name="boucles" id="Non" value="0" checked>Non</p>
+
+    <p> Email <input type="text" name="emailClient" value="mailduclient@ombriere.com"> </p>
+    <p> Autres Infos Client <input type="text" name="prenom" value="Laurence"><input type="text" name="nom" value="Durand"><br>
+        <input type="text" name="adresse" value="2405 Route des Caritat – 26110 Condorcet"><br>
+        <input type="text" name="descriptionprojet" value="Voici une description de mon projet">
+    </p>
+    <input type="hidden" name="submission_id" value="test">
+    <input type="hidden" name="action" value="process_widg_test_form">
+    <input type="hidden" name="referer_url" id="referer_url" value="">
+    <p> <button type="submit" name="calculer" class="submit-btn">Calculer</button> </p>
+
+
+</form>
+
+<script>
+// Fonction pour générer l'URL de redirection avec les paramètres du formulaire
+function updateRedirectUrl() {
+    // URL de base de la page de résultats
+    var baseUrl = '<?php echo home_url("/resultats-chiffrage/"); ?>';
+    
+    // Récupérer les valeurs du formulaire
+    var typeproduit = document.querySelector('input[name="typeform"]:checked').value;
+    var longueur = document.querySelector('input[name="jot_longueur_client"]').value;
+    var largeur = document.querySelector('input[name="jot_largeur_client"]').value;
+    var matiere = document.querySelector('input[name="niveau"]:checked').value;
+    var traverse = document.querySelector('input[name="traverse"]:checked').value;
+    var ourlet = document.querySelector('input[name="ourlet"]:checked').value;
+    var premium = document.querySelector('input[name="premium"]:checked').value;
+    var quantite = document.querySelector('input[name="quantite"]:checked').value;
+    
+    // Calculer le prix (surface x 10€)
+    var prix = (parseFloat(longueur) * parseFloat(largeur) * 10).toFixed(2);
+    
+    // Construire l'URL avec les paramètres
+    var redirectUrl = baseUrl + '?typeproduit=' + encodeURIComponent(typeproduit) +
+                     '&longueur=' + encodeURIComponent(longueur) +
+                     '&largeur=' + encodeURIComponent(largeur) +
+                     '&matiere=' + encodeURIComponent(matiere) +
+                     '&traverse=' + encodeURIComponent(traverse) +
+                     '&ourlet=' + encodeURIComponent(ourlet) +
+                     '&premium=' + encodeURIComponent(premium) +
+                     '&quantite=' + encodeURIComponent(quantite) +
+                     '&prix=' + encodeURIComponent(prix);
+    
+    // Mettre à jour la valeur du champ caché referer_url
+    document.getElementById('referer_url').value = redirectUrl;
+}
+
+// Attacher la fonction aux événements de changement des champs du formulaire
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser l'URL de redirection au chargement de la page
+    updateRedirectUrl();
+    
+    // Mettre à jour l'URL à chaque changement dans le formulaire
+    var formInputs = document.querySelectorAll('.mailcial-form input');
+    formInputs.forEach(function(input) {
+        input.addEventListener('change', updateRedirectUrl);
+    });
+    
+    // Pour les champs numériques, mettre à jour l'URL à chaque saisie
+    var numericInputs = document.querySelectorAll('.mailcial-form input[type="number"]');
+    numericInputs.forEach(function(input) {
+        input.addEventListener('input', updateRedirectUrl);
+    });
+});
+</script>

@@ -1,0 +1,248 @@
+<?php
+// Vérifier si les données sont présentes
+if (!isset($_GET['typeproduit']) || !isset($_GET['longueur']) || !isset($_GET['largeur']) || !isset($_GET['prix'])) {
+    echo '<div class="error-message">Données manquantes pour afficher les résultats.</div>';
+    return;
+}
+
+// Récupérer les données du formulaire depuis l'URL
+$typeproduit = sanitize_text_field($_GET['typeproduit']);
+$longueur = sanitize_text_field($_GET['longueur']);
+$largeur = sanitize_text_field($_GET['largeur']);
+$matiere = isset($_GET['matiere']) ? sanitize_text_field($_GET['matiere']) : '';
+$traverse = isset($_GET['traverse']) ? intval($_GET['traverse']) : 1;
+$ourlet = isset($_GET['ourlet']) ? intval($_GET['ourlet']) : 0;
+$premium = isset($_GET['premium']) ? intval($_GET['premium']) : 0;
+$quantite = isset($_GET['quantite']) ? intval($_GET['quantite']) : 1;
+$prix = sanitize_text_field($_GET['prix']);
+
+// Déterminer le type de produit en texte
+$typeProduitTexte = '';
+switch ($typeproduit) {
+    case 'P':
+        $typeProduitTexte = 'Pergola';
+        break;
+    case 'R':
+        $typeProduitTexte = 'Rideau';
+        break;
+    case 'B':
+        $typeProduitTexte = 'Brise-Vue';
+        break;
+    case 'S':
+        $typeProduitTexte = 'Voile à suspendre';
+        break;
+    default:
+        $typeProduitTexte = 'Produit';
+}
+
+// Déterminer le type de traverse en texte
+$traverseTexte = '';
+switch ($traverse) {
+    case 1:
+        $traverseTexte = 'Oui > 80cm';
+        break;
+    case 2:
+        $traverseTexte = 'Oui < 80cm';
+        break;
+    case 3:
+        $traverseTexte = 'Non';
+        break;
+    default:
+        $traverseTexte = 'Non spécifié';
+}
+
+// Calculer la surface
+$surface = $longueur * $largeur;
+
+// Formater le prix
+$prixFormate = number_format($prix, 2, ',', ' ') . ' €';
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .results-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e18325;
+        }
+        
+        .results-header h1 {
+            color: #e18325;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .results-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .results-details {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .results-column {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px;
+        }
+        
+        .results-section {
+            margin-bottom: 25px;
+        }
+        
+        .results-section h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .results-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #eee;
+        }
+        
+        .results-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .results-value {
+            color: #333;
+        }
+        
+        .results-price {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .results-price-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e18325;
+        }
+        
+        .results-actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .results-button {
+            display: inline-block;
+            background-color: #e18325;
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .results-button:hover {
+            background-color: #d17315;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="results-container">
+        <div class="results-header">
+            <h1>Résultats de votre chiffrage</h1>
+            <p>Voici le détail de votre projet sur mesure</p>
+        </div>
+        
+        <div class="results-details">
+            <div class="results-column">
+                <div class="results-section">
+                    <h2>Caractéristiques du produit</h2>
+                    <div class="results-row">
+                        <span class="results-label">Type de produit:</span>
+                        <span class="results-value"><?php echo $typeProduitTexte; ?></span>
+                    </div>
+                    <div class="results-row">
+                        <span class="results-label">Dimensions:</span>
+                        <span class="results-value"><?php echo $longueur; ?> m × <?php echo $largeur; ?> m</span>
+                    </div>
+                    <div class="results-row">
+                        <span class="results-label">Surface:</span>
+                        <span class="results-value"><?php echo $surface; ?> m²</span>
+                    </div>
+                    <div class="results-row">
+                        <span class="results-label">Matière:</span>
+                        <span class="results-value"><?php echo $matiere; ?></span>
+                    </div>
+                    <?php if ($typeproduit == 'P'): ?>
+                    <div class="results-row">
+                        <span class="results-label">Traverses:</span>
+                        <span class="results-value"><?php echo $traverseTexte; ?></span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <div class="results-column">
+                <div class="results-section">
+                    <h2>Options</h2>
+                    <div class="results-row">
+                        <span class="results-label">Quantité:</span>
+                        <span class="results-value"><?php echo $quantite; ?></span>
+                    </div>
+                    <div class="results-row">
+                        <span class="results-label">Ourlet:</span>
+                        <span class="results-value"><?php echo $ourlet ? 'Oui' : 'Non'; ?></span>
+                    </div>
+                    <div class="results-row">
+                        <span class="results-label">Premium:</span>
+                        <span class="results-value"><?php echo $premium ? 'Oui' : 'Non'; ?></span>
+                    </div>
+                </div>
+                
+                <div class="results-price">
+                    <div>Prix total TTC</div>
+                    <div class="results-price-value"><?php echo $prixFormate; ?></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-actions">
+            <a href="<?php echo home_url('/demo-widg-chiffrage/'); ?>" class="results-button">Retour au formulaire</a>
+            <a href="#" class="results-button">Ajouter au panier</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,874 @@
+<?php
+//
+// Récupération des paramètres d'entrée 
+//
+if (isset($_GET['erreur'])) {
+    wp_die($_GET['erreur']);
+    return;
+}
+
+$pbcalcul = false; // Indique si calcul fait ou pas
+$msgErreurCalcul = '';
+
+if (isset($_GET['a'])) {
+    // ***************************************
+    // Depuis une sauvegarde
+    // ***************************************
+
+    $encoded = $_GET['a'];
+    $decode = base64_decode($encoded);
+    $source = unserialize($decode);
+
+
+    if (!isset($source['save'])) {
+        $pbcalcul = true;
+        $msgErreurCalcul = ("Pb paramètres");
+        return;
+    }
+
+
+    $jot_typeproduit = isset($source['typeproduit'])   ? $source['typeproduit'] : 0;
+    $jot_traverse = isset($source['traverse'])   ? intval($source['traverse']) : 0;
+    $jot_longueur_client = isset($source['longueur'])   ? floatval(sanitize_text_field($source['longueur'])) : 0;
+    $jot_largeur_client  = isset($source['largeur'])    ? floatval(sanitize_text_field($source['largeur'])) : 0;
+
+    $jot_matiere         = isset($source['matiere'])      ? intval($source['matiere']) : 0;
+    $jot_ourlet = false; // Ourlet, chargé seulement si rideau
+    if ($jot_typeproduit == 'R') {
+        $jot_ourlet          = isset($source['ourlet'])       ? boolval($source['ourlet']) : false;
+    }
+    $jot_option_premium  = isset($source['premium']) ? boolval($source['premium']) : false;
+    $bouclesrideau  = isset($source['boucles']) ? boolval($source['boucles']) : false;
+
+    $jot_quantite = isset($source['nombre'])   ? intval($source['nombre']) : 0;
+
+    $jot_email_client = isset($source['email']) ? sanitize_email($source['email']) : '';
+    $jot_infosclient = isset($source['infosclient']) ? $source['infosclient'] : '';
+
+    $jot_form_id         = isset($source['formID'])   ? sanitize_text_field($source['formID']) : '';
+} else {
+    
+    // *************************************
+    // Formulaire JOTFORM
+    // *************************************
+    $source = $_POST;
+
+
+    if (isset($source['submission_id']) && $source['submission_id'] != 'test') {
+
+        // D'abord tester la présence des champs obligatoires
+        if (isset($_GET['type_de_produit'])) {
+            $jot_form_id         = sanitize_text_field($source['submission_id']);
+
+            $bouclesrideau = false;
+            $jot_matiere = 0;
+
+            switch ($_GET['type_de_produit']) {
+                case "pergola":
+                    $jot_typeproduit = "P";
+                    break;
+                case "brise-vue":
+                    $jot_typeproduit = "B";
+                    break;
+                case "rideau":
+                    $jot_typeproduit = "R";
+                    // rideau : jotForm a dû poser la question des boucles
+                    $strLibelBouclesrideau = strtolower(obtenirValeur( $source,'',false)) ;
+                    if (str_contains($strLibelBouclesrideau, 'boucle')) { 
+                        $bouclesrideau = true;
+                    }
+
+                    break;
+                case "suspendre":
+                    $jot_typeproduit = "S";
+                    $jot_matiere = 3; // brise-vue : matière = 3/Dense
+                    break;
+
+                default:
+                    $pbcalcul = true;
+                    $msgErreurCalcul = "Type de produit inconnu";
+            }
+            
+            $tab = obtenirValeur($source, 'dimensions', [0, 0]);
+
+            $jot_longueur_client = jotStringToNum($tab[0]);
+            $jot_largeur_client  = jotStringToNum($tab[1]);
+
+            
+            if (!$pbcalcul && $jot_matiere == 0 ) {
+                
+                // Niveau d'Ombre => niveau
+                $niveau_brut = obtenirValeur($source, 'niveau', '');
+                if ($niveau_brut == '') {
+                    $pbcalcul = true;
+                    $msgErreurCalcul = "Matière ____non___ renseignée.";
+                } elseif (is_numeric($niveau_brut)) {
+                    // Cas où niveau est un entier
+                    $niveau_num = intval($niveau_brut);
+                    if (in_array($niveau_num, [1, 3, 4])) {
+                        $jot_matiere = $niveau_num;
+                    } else {
+                        $pbcalcul = true;
+                        $msgErreurCalcul = "Matière non reconnue.";
+                    }
+                } else {
+                    // Cas texte 
+                    $niveau_brut = strtolower(trim($niveau_brut));
+                    if (str_contains($niveau_brut, 'souple')) {
+                        $jot_matiere = 1;
+                    } elseif (str_contains($niveau_brut, 'dense') && !str_contains($niveau_brut, 'ultra')) {
+                        $jot_matiere = 3;
+                    } elseif (str_contains($niveau_brut, 'ultra')) {
+                        $jot_matiere = 4;
+                    } else {
+                        $pbcalcul = true;
+                        $msgErreurCalcul = "Matière non reconnue.";
+                    }
+                }
+            }
+
+
+            $jot_option_premium = boolval(obtenirValeur($source, 'premium', false));
+            $jot_quantite = obtenirValeur($source, 'nombre', 1 );
+            
+            // Traverses, barres ou poutres : "espace" => 
+            // 1. Oui, effectivement et elles sont espacées de plus 80 cm => Toile à traverses espacées
+            // 3. Non, elle n'est pas équipée de traverses => Voile à suspendre (demande aussi la hauteur des points d'attache)
+            $jot_traverse = 0;
+            if (($jot_typeproduit == 'P') && isset($source["espace"])) {
+                $libEnvironnement = strtolower($source["espace"]); // Mettre en minuscule pour plus de souplesse
+                if (str_contains($libEnvironnement, "oui") && str_contains($libEnvironnement, "plus")) {
+                    $jot_traverse = 1; //Toile à traverses espacées
+
+                } elseif (str_contains($libEnvironnement, "oui") && str_contains($libEnvironnement, "moins")) {
+                    $jot_traverse = 2; // Toile pour pergola
+
+                } elseif (str_contains($libEnvironnement, "non")) {
+                    $jot_traverse = 3; // Voile à suspendre
+                }
+            }
+
+            // $jot_ourlet : seule variable qui dépend parfois du jotform, parfois du type de produit (donc automatique)
+            if ($jot_typeproduit == 'R') {
+                // $jot_ourlet = isset($source['ourlet']) ? boolval($source['ourlet']) : false; // activé seulement si dans le form 
+                $jot_ourlet = boolval(obtenirValeur($source, 'ourlet', false));
+            }
+
+            // Infos client
+            $jot_infosclient = "";
+            if (isset($source['vousetes'])) {
+                $jot_infosclient = $source['vousetes'] . " / "; // Je suis un particulier
+            }
+            $tabNom = obtenirValeur($source, 'nom', []);
+            $tabAdresse = obtenirValeur($source, 'adresse', []);
+            $tabTel = obtenirValeur($source, 'numerode', []);
+            if ($tabNom === [] || $tabAdresse === [] || $tabTel === []) {
+                $pbcalcul = true;
+                $msgErreurCalcul = "Coordonnées non récupérées";
+            }
+
+            if (!$pbcalcul) {
+
+                $strAdresse = $tabAdresse['addr_line1'] . " " . $tabAdresse['addr_line2'] . " , " . $tabAdresse['postal'] . " - " . $tabAdresse['city'] . ", " . $tabAdresse['state'];
+
+                $jot_infosclient = obtenirValeur($tabNom, 'first', '') . " " . obtenirValeur($tabNom, 'last', "N/R") . " / " . $strAdresse . " / " . $tabTel['area'] . $tabTel['phone'];
+                $jot_infosclient .= " ; " . obtenirValeur($source, 'descriptionde', 'N/R');
+            }
+
+            $jot_email_client = sanitize_email(obtenirValeur($source, 'email', ''));
+        } else {
+            $pbcalcul = true;
+            $msgErreurCalcul = "Type de produit non spécifié";
+        }
+    } elseif (isset($source['typeform'])) {
+
+        // *************************************
+        // Formulaire de test
+        // *************************************
+
+        $jot_form_id         = "test";
+        $jot_typeproduit     = $source['typeform']; // 4 formulaires jotform => en test on indique celui qu'on a utilisé
+
+
+        // on determine : couture_main / ourlet / rabat / premium / boucles / 
+
+
+        //$jot_longueur_client = jotStringToNum( $source['tstlongueur']);
+        $jot_longueur_client = jotStringToNum(obtenirValeur($source, 'longueur', 0));
+        $jot_largeur_client  = jotStringToNum(obtenirValeur($source, 'largeur', 0));
+
+        $jot_matiere = $source['niveau'];
+
+        $bouclesrideau = obtenirValeur($source , 'boucles', false );
+
+        $jot_option_premium  = obtenirValeur($source, 'premium', false);
+        $jot_quantite  = obtenirValeur($source, 'nombre', 1);
+
+        // $jot_ourlet : seule variable qui dépend parfois du jotform, parfois du type de produit (donc automatique)
+        $jot_traverse = 0;
+        if ($source['typeform'] == 'R') {
+            $jot_ourlet = $source['ourlet']; // activé seulement si dans le form 
+        }
+        if ($source['typeform'] == 'P') {
+            $jot_traverse = $source['traverse']; // espacement des traverses
+        }
+
+        // Infos client
+        $jot_email_client = sanitize_email($source['emailClient']);
+        $jot_infosclient = $source['prenom'] . " " . $source['nom'] . " / " . obtenirValeur($source, 'adresse', 'N/R') . " / " . $source['descriptionprojet'];
+    } else {
+        $pbcalcul = true;
+        $msgErreurCalcul = 'Configuration du produit non spécifiée';
+    }
+}
+
+// Jamais de double bande pour les produits Web
+$double_bande    = false;
+
+
+if (file_exists(__DIR__ . '/../env.php')) {
+    require_once __DIR__ . '/../env.php';
+}
+
+$debug = true;
+
+if ($debug) {
+    echo '<p>DEBUG ACTIVÉ</p>';
+    echo '<pre>';
+    print_r($source);
+    echo '</pre>';
+    flush(); // force l'envoi du buffer
+}
+
+
+
+
+// config
+if (file_exists(__DIR__ . '/../config.php')) {
+    require_once __DIR__ . '/../config.php';
+    if (!(0 < $ve_cout_horaire_admin && $ve_cout_horaire_admin <= 1000)) {
+        $pbcalcul = true;
+        $msgErreurCalcul = "Paramètres de calcul manquants";
+    }
+} else {
+    $pbcalcul = true;
+    $msgErreurCalcul = "Paramètres de calcul manquants";
+}
+
+
+// *************************************************************************************
+// DEBUT BLOC DE CALCUL SCOURTINETTE
+// *************************************************************************************
+
+if ($jot_largeur_client * $jot_longueur_client == 0) {
+    $pbcalcul = true;
+    $msgErreurCalcul = "Dimensions incorrectes";
+}
+
+if (!$pbcalcul) {
+
+
+    //calcul du montant du cout "administratif" (cout horaire / 60min * temps administratif en minutes)
+    $int_montant_administratif = $ve_cout_horaire_admin / 60 * $ve_temps_administratif;
+
+    //Calcul de la longueur retenue = (longueur client + 40 cm)
+    $int_longueur_retenue      = intval($jot_longueur_client) + 0.40;
+
+    //Choix de la largeur retenue selon la largeur client
+    if ($jot_largeur_client <= 0.40) {
+        $int_largeur_retenue = 0.50;
+    } elseif ($jot_largeur_client <= 0.90) {
+        $int_largeur_retenue = 1.00;
+    } elseif ($jot_largeur_client <= 1.40) {
+        $int_largeur_retenue = 1.50;
+    } elseif ($jot_largeur_client <= 1.90) {
+        $int_largeur_retenue = 2.00;
+    } elseif ($jot_largeur_client <= 2.40) {
+        $int_largeur_retenue = 2.50;
+    } elseif ($jot_largeur_client <= 2.90) {
+        $int_largeur_retenue = 3.00;
+    } elseif ($jot_largeur_client <= 3.40) {
+        $int_largeur_retenue = 3.50;
+    } elseif ($jot_largeur_client <= 4.00) {
+        $int_largeur_retenue = 4.00;
+    } else {
+        $pbcalcul = true;
+        $msgErreurCalcul = ("Ombrière demandée trop large (" . $jot_largeur_client . "m).");
+    }
+
+    //calcul de la surface avec les longueur et largeur "retenue"
+    $int_surface_retenue = $int_longueur_retenue * $int_largeur_retenue;
+
+    // ***************************************************************
+    // Ici : bloc spécial web : déterminer $couture_main, maintenant qu'on a la surface retenue.
+    // Rideau et Brise-Vue : M0 pas de corde (couture_main=6) 
+    // Pergola : > 80cm (1) => M3 toile à traverses espacées (3) ; < 80 cm (2) => M0 Pas de cordes (4) ; Non (3) : selon surface
+    //                                                                                                  moins de 16m2  : M2 (2)
+    //                                                                                                  plus de 16 : M3 Pergola (3)
+    // Voile à Suspendre : selon surface : moins de 16m2 : M2 (2)
+    //                                      plus de 16m2 : M3 Voiles (5)
+
+    $double_bande    = false; // Toujours faux sur le web, jamais de double-bande
+
+    
+
+    switch ($jot_typeproduit) {
+        case 'R': // Rideau
+            $couture_main = 6; // M0 pas de corde
+    
+            // $jot_ourlet // Selon réponse, on l'a chargé auparavant
+            $rabat           = true; // on a un rabat
+            break;
+
+        case 'B': // Brise-Vue
+            $couture_main = 6; // M0 pas de corde
+            $jot_ourlet = true;
+            $rabat           = true; // on a un rabat
+            break;
+
+        case 'P': // Pergola
+
+            if ($jot_traverse == 1) {
+                $couture_main = 3; // > 80cm : M3 toile à traverses espacées
+                $rabat = false;
+                $jot_ourlet = false;
+            } elseif ($jot_traverse == 2) {
+                $couture_main = 4; // < 80cm : M0 pas de cordes
+                $rabat           = true; // on a un rabat
+                $jot_ourlet        = true; // on a un ourlet
+            } else {
+                // traverse == 3 ou non précisé
+                $couture_main = ($int_surface_retenue < 16) ? 2 : 3; // M2 ou M3
+                $rabat = false;
+                $jot_ourlet = false;
+            }
+            break;
+
+        case 'S': // Suspendre
+            $couture_main = ($int_surface_retenue <= 16) ? 2 : 5; // M2 ou M3 voiles
+            $rabat           = false; // on n'a pas de rabat
+            $jot_ourlet = false;
+            break;
+
+        default:
+            $pbcalcul = true;
+            $msgErreurCalcul = ("Attention type de produit non identifié");
+            break;
+    }
+
+
+    // retour bloc scourtinette desk
+    // **************************************************************
+
+    //contrôle des règles à respecter (sinon blocage calcul prix)
+    //si M0, ourlet et rabat obligatoires
+    switch ($couture_main) {
+
+        //M2 : Voile à suspendre 4 point d'attache 					(de 0 a 16m²)								Tissage dense
+        case  2:
+            if ($int_surface_retenue > 16) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention M2 : Voile à suspendre 4 point d'attache, surface maxi 16m²");
+            }
+
+            if ($jot_matiere != 3) {  // 3-DENSE ?
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention M2 : Voile à suspendre 4 point d'attache, matière Tissage dense uniquement");
+            }
+            break;
+
+        //vérif tissage et surface
+        //M3 : toile à traverses espacées 						(de 0 à 29m²)								Tissage dense
+        case 3:
+            if ($int_surface_retenue > 29) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention M3 : toile à traverses espacées, surface maximum 29m²");
+            }
+
+            if ($jot_matiere != 3) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention M3 : toile à traverses espacées, matière Tissage dense uniquement");
+            }
+            break;
+        case 4:
+            if (!$jot_ourlet) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention ombrière type M0 : Ourlet obligatoire");
+            }
+            if (!$rabat) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention ombrière type M0 : Rabat obligatoire");
+            }
+            break;
+
+            //Ourlet fait sur laize + Rabat fait sur la longueur :toile à poser sur pergola	≤ 22m² dense et ultra dense
+            if ($int_surface_retenue <= 22) {
+                if ($jot_matiere == 1 or $jot_matiere == 2) {
+                    $pbcalcul = true;
+                    $msgErreurCalcul = ("Attention Toile à poser sur pergola surface maxi 22m² en tissage Dense et Ultra Dense");
+                }
+            }
+
+            //Ourlet fait sur laize + Rabat fait sur la longueur : toile à poser sur pergola	entre 22m² et  29m² uniquement dense
+            if ($int_surface_retenue > 29) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention Toile à poser sur pergola surface maxi à 29m²");
+            } elseif ($int_surface_retenue > 22) {
+                if ($jot_matiere == 1 or $jot_matiere == 2 or $jot_matiere == 4) {
+                    $pbcalcul = true;
+                    $msgErreurCalcul = ("Attention Toile à poser sur pergola de 22 à 29m² : tissage Dense uniquement");
+                }
+            }
+            break;
+
+        //M3 : Voile à suspendre multi point d'attache 					(de 16 à 29m²)								Tissage dense
+        case  5:
+            if ($int_surface_retenue > 29 or $int_surface_retenue < 16) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention M3 : Voile à suspendre multi point d'attache, surface comprise entre 16 et 29m²");
+            }
+            if ($jot_matiere != 3) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention M3 : Voile à suspendre multi point d'attache, matière Tissage dense uniquement");
+            }
+            break;
+
+
+        //rideaux 									maxi 29m²								dense / ultra dense / souple
+        case 6:
+            if ($int_surface_retenue > 29) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention Rideaux surface maximum 29m²");
+            }
+
+
+            if (!$jot_ourlet) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention rideau type M0 : Ourlet obligatoire");
+            }
+            if (!$rabat) {
+                $pbcalcul = true;
+                $msgErreurCalcul = ("Attention rideau type M0 : Rabat obligatoire");
+            }
+
+            break;
+    }
+
+    //option premium possible que sur M0 et M2
+    if ($jot_option_premium) {
+
+        if ($couture_main == 1) {
+            $pbcalcul = true;
+            $msgErreurCalcul = ("Option premium impossible pour ombrière M1");
+        }
+        if ($couture_main == 3) {
+            $pbcalcul = true;
+            $msgErreurCalcul = ("Option premium impossible pour ombrière M3");
+        }
+        if ($couture_main == 5) {
+            $pbcalcul = true;
+            $msgErreurCalcul = ("Option premium impossible pour ombrière M3"); // M5 ???
+        }
+    }
+
+    //brise vue / vent 							maxi 29m²								dense / ultra dense / souple
+    //non traité dans scourtinette DESK // JC : à mettre dans scourtinette web ?
+    // SI SEL_type_ombriere_rideau = "brise vue/vent" ALORS
+    // 	SI SAI_surface_retenue>29 ALORS
+    // 		LIB_Commentaires = LIB_Commentaires + RC + "Attention Rideaux surface maxi 29m²"
+    // 	FIN
+    // FIN
+
+
+    // calcul des montants matière selon la matière sélectionnée (grammage)
+    if ($jot_matiere < 1) {
+        $jot_matiere = 1;
+    }
+    switch ($jot_matiere) {
+        case 1: // Matière 900g (Tissage souple)
+            $int_cout_vente_mp   = $ve_cout_achat_mp * $ve_coef_vente_mp;
+            $int_montant_matiere = $int_cout_vente_mp * $int_surface_retenue;
+            $res_poids_theorique = $int_surface_retenue * 0.9;
+            break;
+        case 2: // Matière 1000g
+            //Cas particulier matière  1000g plus commercialisée
+            $res_poids_theorique = $int_surface_retenue * 1.0;
+            $int_cout_vente_mp   = ($int_largeur_retenue >= 3)
+                ? $ve_cout_achat_mp_1000sup3 * $ve_coef_vente_mp
+                : $ve_cout_achat_mp1000inf3m * $ve_coef_vente_mp;
+            $int_montant_matiere = $int_cout_vente_mp * $int_surface_retenue;
+            break;
+        case 3: // Matière 1200g (Tissage dense)
+            $int_cout_vente_mp   = $ve_cout_achat_mp_1200 * $ve_coef_vente_mp;
+            $int_montant_matiere = $int_cout_vente_mp * $int_surface_retenue;
+            $res_poids_theorique = $int_surface_retenue * 1.2;
+            break;
+        case 4: // Matière 1600g HD (Tissage ultra dense)
+            $int_cout_vente_mp   = $ve_cout_achat_mp_1600 * $ve_coef_vente_mp;
+            $int_montant_matiere = $int_cout_vente_mp * $int_surface_retenue;
+            $res_poids_theorique = $int_surface_retenue * 1.6;
+            break;
+        default:
+            $int_cout_vente_mp   = $ve_cout_achat_mp * $ve_coef_vente_mp;
+            $int_montant_matiere = $int_cout_vente_mp * $int_surface_retenue;
+            $res_poids_theorique = $int_surface_retenue * 0.9;
+            break;
+    }
+
+    //calcul montant manutention = cout horaire manutention / 60 * temps manutention
+    $int_montant_manutention = $ve_cout_horaire_manutention / 60 * $ve_temps_manutention;
+
+    //Calcul montant coupe rectangle selon la largeur retenue (règle arbitraire définie par La Scourtinerie)
+    if ($int_largeur_retenue <= 1.5) {
+        $int_montant_coupe_rectangle = $ve_cout_coupe_MP_rectangle_ml / 60 * $ve_temps_decoupe_metre * $int_largeur_retenue * 2;
+    } elseif ($int_largeur_retenue <= 3) {
+        $int_montant_coupe_rectangle = $ve_cout_coupe_MP_rectangle_ml / 60 * $ve_temps_decoupe_metre * $int_largeur_retenue * 4;
+    } elseif ($int_largeur_retenue <= 4) {
+        $int_montant_coupe_rectangle = $ve_cout_coupe_MP_rectangle_ml / 60 * $ve_temps_decoupe_metre * $int_largeur_retenue * 6;
+    } else {
+        //existe pas (bloqué en amont)
+        $int_montant_coupe_rectangle = 0;
+    }
+
+    //calcul du périmètre du rectangle = longueur retenue * 2 + largeur retenue * 2
+    $int_perimetre_rectangle = $int_longueur_retenue * 2 + $int_largeur_retenue * 2;
+
+
+
+    //temps de découpe atelier est égal au temps de découpe au mètre
+    $int_temps_decoupe_atelier = $ve_temps_decoupe_metre;
+
+    //calcul du montant de découpe atelier = cout horaire découpe Matière / 60 * temps de découpe atelier * périmètre du rectangle
+    $int_montant_coupe_atelier = $ve_cout_coupe_MP_rectangle_ml / 60 * $int_temps_decoupe_atelier * $int_perimetre_rectangle;
+
+    //calcul du montant des repères couture
+    $int_montant_reperes_couture = $ve_cout_coupe_MP_rectangle_ml / 60 * $ve_temps_reperes_couture * $int_perimetre_rectangle;
+
+    //calcul du temps et montant de manipulation, fonction de la largeur retenue
+    $int_Temps_manipulations_interne_en_minutes = ($int_largeur_retenue <= 3) ? 15 : 30;
+
+    $int_montant_manipulations = $int_Temps_manipulations_interne_en_minutes * $ve_cout_horaire_manutention / 60;
+
+    //si ourlet alors calcul du montant ourlet
+    $int_montant_ourlet = $jot_ourlet
+        ? $ve_cout_couture_machine / 60 * $ve_temps_couture_machine_ml * $int_largeur_retenue * 2
+        : 0;
+
+
+    //Calcul du nombre de boucles sur site WEB :
+    //si Ombrière : pas de boucle
+    //si Rideau (M0 rideau) : une boucle tous les 25 cm sur la largeur , nombre de boucles = (largeur / 25cm) + 1
+
+    // Sur la Scourtinette DESK le nombre de boucle est proposé en automatique sur selection "M0 rideau" ou saisi par le commercial
+    // Sur la Scourtinette WEB le nombre de boucle est calculé automatiquement pour les rideaux, et est = 0 pour les ombrières
+    $int_nbre_boucles = 0;
+    if ($bouclesrideau) {
+        $int_nbre_boucles = ($jot_largeur_client * 4) + 1;  // Attention ce n'est pas la largeur retenue mais la largeur demandée
+    }
+
+    //calcul montant boucles
+    $int_montant_boucles = $int_nbre_boucles * $ve_cout_unitaire_boucle;
+
+    //Si rabat alors calcul du montant rabat avec un coef de +20% si plus de 3 mètres en longueur retenue
+    $int_montant_rabat = 0;
+    if ($rabat) {
+        $int_montant_rabat = $ve_cout_couture_machine / 60 * $ve_temps_couture_machine_ml * $int_longueur_retenue * 2;
+        if ($int_longueur_retenue > 3) {
+            $int_montant_rabat /= 0.80; // si plus de 3 mètres "20% de cout en plus"
+        }
+    }
+
+    //selon type de cordage, calcul du montant couture main
+    if ($couture_main == 1) { // Cordage M1 périphérie
+        $int_Longueur_corde_peripherie = $int_longueur_retenue * 2 + $int_largeur_retenue * 2;
+    } elseif ($couture_main == 2) { //cordage M2 périph+diagonale
+        $int_Longueur_corde_peripherie = ($int_longueur_retenue * 2 + $int_largeur_retenue * 2) +
+            (sqrt(pow($int_longueur_retenue, 2) + pow($int_largeur_retenue, 2)) * 2);
+    } elseif ($couture_main == 3 or $couture_main == 5) { //cordage M3 Quadrillage+périphérie
+        $int_Nbre_quadrillages_largeur  = ceil($int_largeur_retenue) + 1;
+        $int_Nbre_quadrillages_longueur = ceil($int_longueur_retenue) + 1;
+
+        $int_Longueur_corde_peripherie    = ($int_Nbre_quadrillages_largeur * $int_longueur_retenue) +
+            ($int_Nbre_quadrillages_longueur * $int_largeur_retenue);
+    } else { //Pas de cordage M0
+        // défaut : SEL_couture_main = 4 ou 6
+        $int_Longueur_corde_peripherie = 0;
+    }
+    $int_montant_main = $ve_cout_couture_main / 60 * $ve_temps_couture_main * $int_Longueur_corde_peripherie;
+
+    //calcul cout de l'option premium si sélectionnée
+    $int_montant_option_premium = 0;
+    if ($jot_option_premium) {
+        $int_montant_option_premium = $ve_cout_option_premium * ($int_longueur_retenue * 2 + $int_largeur_retenue * 2);
+    }
+
+    //si double bande, ajout d'un temps de couture raccord et calcul du montant couture raccord
+    $int_montant_couture_raccord = 0;
+    if ($double_bande) {
+        $int_montant_couture_raccord = $ve_cout_raccord_au_ml * $int_longueur_retenue;
+    }
+
+    //calcul montant étiquetage et pliage
+    $int_montant_etiqu = $ve_temps_etiq_pliage * $ve_cout_horaire_manutention / 60;
+
+    //calcul montant entretien bâtiment
+    $int_montant_entretien = $ve_temps_entretien / $ve_nbre_ombrieres_jour * $ve_cout_horaire_entretien / 60;
+
+    $RES_montant_total = $int_montant_administratif + $int_montant_matiere + $int_montant_manutention
+        + $int_montant_coupe_rectangle + $int_montant_coupe_atelier + $int_montant_reperes_couture
+        + $int_montant_manipulations  + $int_montant_option_premium;
+    $RES_montant_total += $int_montant_ourlet + $int_montant_boucles + $int_montant_rabat + $int_montant_main
+        + $int_montant_couture_raccord + $int_montant_etiqu + $ve_montant_expe + $int_montant_entretien + $ve_montant_consommables;
+
+    $RES_montant_total_ttc = $RES_montant_total * 1.20;
+}
+//
+// FIN BLOC CALCUL SCOURTINETTE
+//
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Widget de Chiffrage</title>
+    <style>
+        .widg_chiffrage {
+            background-color: #fbf8f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: fit-content;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .result-block {
+            display: table;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .result-block div {
+            margin: 0.5rem 0;
+        }
+
+        .result-row {
+            display: table-row;
+        }
+
+        .result-row {
+            display: table-row;
+        }
+
+
+        .result-cell {
+            display: table-cell;
+            padding: .35rem 1.2rem;
+            vertical-align: middle;
+        }
+
+        .result-label {
+            text-align: left;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .result-value {
+            text-align: right;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .result-row.spacer .result-cell {
+            height: 1rem;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            width: 150px;
+            min-width: 150px;
+            height: 45px;
+            background-color: #e18325;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 15px;
+            transition: background 0.3s;
+
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .submit-btn:hover {
+            background-color: #c96e1f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="widg_chiffrage">
+        <?php if (isset($_GET['mail_sent_commercial']) && $_GET['mail_sent_commercial'] == '1') { ?>
+            <p style="color: green;">Votre demande a été transmise au service commercial, nous ne manquerons pas de revenir vers vous prochainement !</p>
+
+        <?php } elseif (isset($_GET['mail_sent_client']) && $_GET['mail_sent_client'] == '1') { ?>
+            <p style="color: green;">Nous venons de vous envoyer un email récapitulatif de votre projet. A bientôt pour la suite !</p>
+        <?php } elseif (isset($_GET['product_added'])) { ?>
+            <p style="color: green;">Produit ajouté au panier.</p>
+
+
+            <?php } else if (isset($_POST['envoyer_mailcial'])) {
+            csamail('mailcial');
+        } elseif (isset($_POST['envoyer_mailclient'])) {
+            csamail('mailclient');
+        } elseif (isset($_POST['ajoutpanier'])) {
+            // <!-- ajouter les paramètres ici ?  -->
+            csa_wc_ajoutpanier();
+        } else {
+            // Bloc résultat du calcul
+            if (!$pbcalcul) { ?>
+                <!-- Bloc de résultats -->
+                <div class="result-block">
+                    <div>Poids de l'ombrière : <strong><?php echo number_format($res_poids_theorique, 2, ',', ' '); ?> kg</strong></div>
+                    <div>Votre prix HT : <strong><?php echo number_format($RES_montant_total, 2, ',', ' '); ?> €</strong></div>
+                    <div>Votre prix TTC : <strong><?php echo number_format($RES_montant_total_ttc, 2, ',', ' '); ?> €</strong></div>
+                </div>
+                <!-- Lien pour retrouver le projet (vers moi-même) avec save=1 -->
+                
+                <?php
+                $current_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+                //$current_url = home_url(add_query_arg(array(), $_SERVER['REQUEST_URI']));
+                $params = array(
+                    'save'         => 1,
+                    'typeproduit'   => $jot_typeproduit,
+                    'traverse'     => $jot_traverse,
+                    'longueur'   => $jot_longueur_client,
+                    'largeur'    => $jot_largeur_client,
+                    'matiere'      => $jot_matiere,
+                    'ourlet'       => $jot_ourlet ? '1' : '0',
+                    'premium'      => $jot_option_premium ? '1' : '0',
+                    'boucles'      => $bouclesrideau ? '1' : '0',
+                    'email'         => $jot_email_client,
+                    'infosclient'   => $jot_infosclient,
+                    'formID'   => $jot_form_id,
+                    'nombre'     => $jot_quantite,
+                );
+                $hashParam = base64_encode(serialize($params));
+                $paramURL = array(
+                    'a' => $hashParam
+                );
+
+                $url_retrouver = add_query_arg($paramURL, $current_url);
+                ?>
+                <?php
+                $montrerLien = $debug; // Mettre true pour contrôler le lien et le hash
+                
+                if ($montrerLien) { ?>
+                    <div>
+                        <a href="<?php echo esc_url($url_retrouver); ?>" target="_blank">Retrouver mon projet</a>
+                    </div>
+                <?php } ?>
+                <!-- Formulaires d'action -->
+                <div class="container">
+                    <?php if ( $atts["ajoutpanier"] && is_numeric($jot_quantite) ) { ?>
+                        <form method="post" class="mailcial-form">
+                            <input type="hidden" name="productname"
+                                value="Produit <?php if ($jot_option_premium) {
+                                                    echo 'premium';
+                                                } ?> sur mesure longueur <?php echo esc_attr($jot_longueur_client); ?> m">
+
+
+                            <input type="hidden" name="price" value="<?php echo esc_attr($RES_montant_total_ttc); ?>">
+                             <input type="hidden" name="qty" value="<?php echo esc_attr($jot_quantite); ?>">
+
+
+                            <button type="submit" name="ajoutpanier" class="elementor-button-text">Ajouter au panier</button>
+                        </form>
+                    <?php } ?>
+                    <?php
+
+
+
+                    if ($atts["mailcial"]) {
+                        // Formulaire pour envoi email au commercial ombriere
+                    ?>
+
+                        <form method="post" class="mailcial-form">
+                            <input type="hidden" name="typeproduit" value="<?php echo esc_attr($jot_typeproduit); ?>">
+                            <input type="hidden" name="traverse" value="<?php echo esc_attr($jot_traverse); ?>">
+                            <input type="hidden" name="longueur" value="<?php echo esc_attr($jot_longueur_client); ?>">
+                            <input type="hidden" name="largeur" value="<?php echo esc_attr($jot_largeur_client); ?>">
+                            <input type="hidden" name="matiere" value="<?php echo esc_attr($jot_matiere); ?>">
+                            <input type="hidden" name="ourlet" value="<?php echo esc_attr($jot_ourlet); ?>">
+                            <input type="hidden" name="premium" value="<?php echo esc_attr($jot_option_premium); ?>">
+                            <input type="hidden" name="boucles" value="<?php echo esc_attr($bouclesrideau); ?>">
+
+                            <input type="hidden" name="emailClient" value="<?php echo esc_attr($jot_email_client); ?>">
+                            <input type="hidden" name="infosclient" value="<?php echo esc_attr($jot_infosclient); ?>">
+                            <input type="hidden" name="prix" value="<?php echo esc_attr($RES_montant_total_ttc); ?>">
+                            <input type="hidden" name="formID" value="<?php echo esc_attr($jot_form_id); ?>">
+
+                            <input type="hidden" name="nombre" value="<?php echo esc_attr($jot_quantite); ?>">
+
+
+                            <button type="submit" name="envoyer_mailcial" class="elementor-button-text">Demander à être recontacté</button>
+                        </form>
+
+
+                    <?php
+                    }
+                    if ($atts["sauvegarde"]) {
+                        // Formulaire pour envoi mail sauvegarde au client
+                    ?>
+                        <form method="post" class="mailcial-form">
+                            <input type="hidden" name="typeproduit" value="<?php echo esc_attr($jot_typeproduit); ?>">
+                            <input type="hidden" name="nombre" value="<?php echo esc_attr($jot_quantite); ?>">
+                            <input type="hidden" name="traverse" value="<?php echo esc_attr($jot_traverse); ?>">
+                            <input type="hidden" name="longueur" value="<?php echo esc_attr($jot_longueur_client); ?>">
+                            <input type="hidden" name="largeur" value="<?php echo esc_attr($jot_largeur_client); ?>">
+                            <input type="hidden" name="matiere" value="<?php echo esc_attr($jot_matiere); ?>">
+                            <input type="hidden" name="ourlet" value="<?php echo esc_attr($jot_ourlet); ?>">
+                            <input type="hidden" name="premium" value="<?php echo esc_attr($jot_option_premium); ?>">
+                            <input type="hidden" name="boucles" value="<?php echo esc_attr($bouclesrideau); ?>">
+                            <input type="hidden" name="urlRetrouver" value="<?= $base_url . $url_retrouver ?>">
+                            <input type="hidden" name="emailClient" value="<?php echo esc_attr($jot_email_client); ?>">
+                            <input type="hidden" name="infosclient" value="<?php echo esc_attr($jot_infosclient); ?>">
+                            <input type="hidden" name="prix" value="<?php echo esc_attr($RES_montant_total_ttc); ?>">
+                            <input type="hidden" name="formID" value="<?php echo esc_attr($jot_form_id); ?>">
+                            <button type="submit" name="envoyer_mailclient" class="elementor-button-text">Enregistrer</button>
+                        </form>
+
+
+                    <?php } ?>
+
+                </div>
+            <?php } else { ?>
+                <p>Désolé, ce calcul ne peut pas être réalisé : <?= $msgErreurCalcul ?></p>
+        <?php }
+        }
+            // if (!$pbcalcul) {
+            //     // Préparation des variables à utiliser dans le template email-client.phtml
+            //     $typeform     = $jot_typeproduit;
+            //     $traverse     = $jot_traverse;
+            //     $premium      = $jot_option_premium ? '1' : '0';
+            //     $emailClient  = $jot_email_client;
+            //     $infosclient  = $jot_infosclient;
+            //     $formID   = $jot_form_id;
+            // }
+        ?>
+    </div>
+</body>
+
+</html>
