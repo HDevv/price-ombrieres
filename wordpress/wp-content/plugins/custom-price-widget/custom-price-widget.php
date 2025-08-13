@@ -14,8 +14,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-
-
 /**
  * Définition du shortcode qui affichera le widget de chiffrage.
  */
@@ -113,10 +111,10 @@ add_action('admin_post_nopriv_process_widg_test_form', 'handle_widg_test_form');
  * Fonction qui traite la soumission du formulaire de test
  */
 function handle_widg_test_form() {
-    // Activer l'affichage des erreurs pour le débogage
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+    // Vérification CSRF avec nonce
+    if (!isset($_POST['widg_test_nonce']) || !wp_verify_nonce($_POST['widg_test_nonce'], 'widg_test_form_action')) {
+        wp_die('Erreur de sécurité : token de sécurité invalide.', 'Erreur de sécurité', array('response' => 403));
+    }
     
     // URL de la page de résultats
     $results_page_url = home_url('/resultats-chiffrage/');

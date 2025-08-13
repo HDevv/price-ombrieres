@@ -79,6 +79,7 @@ if (isset($_GET['mail_sent_commercial']) || isset($_GET['mail_sent_client'])) {
 }
 ?>
 
+
 <form method="post" class="mailcial-form" action="<?php echo admin_url('admin-post.php'); ?>">
 
 
@@ -101,7 +102,7 @@ if (isset($_GET['mail_sent_commercial']) || isset($_GET['mail_sent_client'])) {
         <input type="radio" id="moin80cm" name="traverse" value="2"><label for="Oui moins de 80cm">Oui < 80cm</label>
                 <input type="radio" id="Aucune" name="traverse" value="3"><label for="Non">Non</label>
 
-    </p>
+    </p>Styles CSS intégrés 
 
     <p> Longueur :<input type="number" name="jot_longueur_client" value="4"> </p>
     <p> Largeur :<input type="number" name="jot_largeur_client" value="3"> </p>
@@ -125,10 +126,13 @@ if (isset($_GET['mail_sent_commercial']) || isset($_GET['mail_sent_client'])) {
     <input type="hidden" name="submission_id" value="test">
     <input type="hidden" name="action" value="process_widg_test_form">
     <input type="hidden" name="referer_url" id="referer_url" value="">
+    <?php wp_nonce_field('widg_test_form_action', 'widg_test_nonce'); ?>
     <p> <button type="submit" name="calculer" class="submit-btn">Calculer</button> </p>
 
 
 </form>
+
+
 
 <script>
 // Fonction pour générer l'URL de redirection avec les paramètres du formulaire

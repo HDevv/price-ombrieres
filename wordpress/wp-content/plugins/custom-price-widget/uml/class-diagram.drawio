@@ -1,0 +1,246 @@
+<mxfile host="app.diagrams.net" modified="2025-08-13T15:37:38.000Z" agent="5.0" etag="drawio" version="22.1.16" type="device">
+  <diagram name="Class Diagram" id="class-diagram">
+    <mxGraphModel dx="1422" dy="754" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Diagramme de Classes - Plugin Custom Price Widget" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- WordPress Core Package -->
+        <mxCell id="wpPackage" value="WordPress Core" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="300" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="wpClass" value="WordPress&#xa;&#xa;+ add_shortcode()&#xa;+ add_filter()&#xa;+ add_action()" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="wpPackage">
+          <mxGeometry x="20" y="40" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="wcClass" value="WooCommerce&#xa;&#xa;+ wc_get_product()&#xa;+ WC_Cart&#xa;+ woocommerce_before_calculate_totals&#xa;+ woocommerce_cart_item_name" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="wpPackage">
+          <mxGeometry x="160" y="40" width="120" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Plugin Package -->
+        <mxCell id="pluginPackage" value="Plugin Custom Price Widget" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="400" y="80" width="900" height="600" as="geometry" />
+        </mxCell>
+        
+        <!-- Main Plugin Class -->
+        <mxCell id="mainClass" value="CustomPriceWidget&#xa;&#xa;- configPath: string&#xa;- templatePath: string&#xa;&#xa;+ block_widg_chiffrage($atts, $content): string&#xa;+ block_widg_test($atts, $content): string&#xa;+ block_results_page($atts, $content): string&#xa;+ handle_widg_test_form(): void&#xa;+ personnaliser_nom_produit_panier($nom, $cart_item, $cart_item_key): string&#xa;+ appliquer_prix_personnalise($cart): void" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="20" y="40" width="280" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- Configuration Manager -->
+        <mxCell id="configClass" value="ConfigurationManager&#xa;&#xa;+ $host: string&#xa;+ $cial_email: string&#xa;+ $base_url: string&#xa;+ $debug: boolean&#xa;+ $pageTestActive: boolean&#xa;&#xa;+ loadConfig(): array&#xa;+ loadEnv(): array" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="320" y="40" width="180" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Product Calculator -->
+        <mxCell id="calculatorClass" value="ProductCalculator&#xa;&#xa;+ libMatiere($intMatiere): string&#xa;+ libTraverse($intTraverse): string&#xa;+ libTypeProduit($strTypeProduit): string&#xa;+ calculatePrice($dimensions, $materials, $options): float" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="520" y="40" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Email Manager -->
+        <mxCell id="emailClass" value="EmailManager&#xa;&#xa;- type: string&#xa;- templates: array&#xa;&#xa;+ csamail($type): boolean&#xa;+ loadTemplate($templateName): string&#xa;+ sendEmail($to, $subject, $body): boolean" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="740" y="40" width="140" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- WooCommerce Integration -->
+        <mxCell id="wcIntegrationClass" value="WooCommerceIntegration&#xa;&#xa;+ csa_wc_ajoutpanier(): void&#xa;+ createCustomProduct($productData): int&#xa;+ addToCart($productId, $quantity): boolean" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="20" y="220" width="200" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Template Renderer -->
+        <mxCell id="templateClass" value="TemplateRenderer&#xa;&#xa;- templatePath: string&#xa;&#xa;+ renderTemplate($templateFile, $data): string&#xa;+ includeTemplate($file): string" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="240" y="220" width="180" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Data Validator -->
+        <mxCell id="validatorClass" value="DataValidator&#xa;&#xa;+ sanitizeInput($data): array&#xa;+ validateEmail($email): boolean&#xa;+ validateDimensions($width, $height): boolean&#xa;+ obtenirValeur($source, $key, $default): mixed&#xa;+ jotStringToNum($value): float" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="440" y="220" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Form Handler -->
+        <mxCell id="formClass" value="FormHandler&#xa;&#xa;- postData: array&#xa;&#xa;+ processForm(): array&#xa;+ extractFormData(): array&#xa;+ validateFormData($data): boolean" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="660" y="220" width="160" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Templates Package -->
+        <mxCell id="templatesPackage" value="Templates" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="pluginPackage">
+          <mxGeometry x="20" y="350" width="860" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="emailClientTemplate" value="EmailClientTemplate&#xa;&#xa;+ render($data): string" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="templatesPackage">
+          <mxGeometry x="20" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="emailCommercialTemplate" value="EmailCommercialTemplate&#xa;&#xa;+ render($data): string" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="templatesPackage">
+          <mxGeometry x="180" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="widgChiffrageTemplate" value="WidgChiffrageTemplate&#xa;&#xa;+ render($data): string" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="templatesPackage">
+          <mxGeometry x="340" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="widgTestTemplate" value="WidgTestTemplate&#xa;&#xa;+ render($data): string" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="templatesPackage">
+          <mxGeometry x="500" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="resultsPageTemplate" value="ResultsPageTemplate&#xa;&#xa;+ render($data): string" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="templatesPackage">
+          <mxGeometry x="660" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Relations -->
+        <!-- Main class uses other classes -->
+        <mxCell id="rel1" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="configClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="700" y="200" as="sourcePoint" />
+            <mxPoint x="720" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel2" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="calculatorClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="700" y="160" as="sourcePoint" />
+            <mxPoint x="920" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel3" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="emailClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="700" y="140" as="sourcePoint" />
+            <mxPoint x="1140" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel4" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="wcIntegrationClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="560" y="240" as="sourcePoint" />
+            <mxPoint x="520" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel5" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="templateClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="560" y="240" as="sourcePoint" />
+            <mxPoint x="730" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel6" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="validatorClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="700" y="240" as="sourcePoint" />
+            <mxPoint x="840" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel7" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="formClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="700" y="240" as="sourcePoint" />
+            <mxPoint x="1060" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Email Manager uses templates -->
+        <mxCell id="rel8" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="emailClass" target="emailClientTemplate">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1140" y="200" as="sourcePoint" />
+            <mxPoint x="490" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel9" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="emailClass" target="emailCommercialTemplate">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1140" y="200" as="sourcePoint" />
+            <mxPoint x="650" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Template Renderer uses templates -->
+        <mxCell id="rel10" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="templateClass" target="widgChiffrageTemplate">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="730" y="340" as="sourcePoint" />
+            <mxPoint x="810" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel11" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="templateClass" target="widgTestTemplate">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="730" y="340" as="sourcePoint" />
+            <mxPoint x="970" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel12" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="templateClass" target="resultsPageTemplate">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="730" y="340" as="sourcePoint" />
+            <mxPoint x="1130" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- WooCommerce Integration extends WooCommerce -->
+        <mxCell id="rel13" value="extends" style="endArrow=block;endFill=0;html=1;rounded=0;" edge="1" parent="1" source="wcIntegrationClass" target="wcClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="420" y="340" as="sourcePoint" />
+            <mxPoint x="270" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Main class extends WordPress -->
+        <mxCell id="rel14" value="extends" style="endArrow=block;endFill=0;html=1;rounded=0;" edge="1" parent="1" source="mainClass" target="wpClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="420" y="160" as="sourcePoint" />
+            <mxPoint x="170" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Composition relationships -->
+        <mxCell id="rel15" value="" style="endArrow=diamondThin;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="configClass" target="mainClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="720" y="140" as="sourcePoint" />
+            <mxPoint x="700" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel16" value="" style="endArrow=diamondThin;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="emailClass" target="mainClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1140" y="120" as="sourcePoint" />
+            <mxPoint x="700" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Aggregation relationships -->
+        <mxCell id="rel17" value="" style="endArrow=diamondThin;endFill=0;html=1;rounded=0;" edge="1" parent="1" source="templateClass" target="mainClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="640" y="300" as="sourcePoint" />
+            <mxPoint x="560" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel18" value="" style="endArrow=diamondThin;endFill=0;html=1;rounded=0;" edge="1" parent="1" source="validatorClass" target="formClass">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="840" y="320" as="sourcePoint" />
+            <mxPoint x="1060" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Notes -->
+        <mxCell id="note1" value="Gestion dual des emails:&#xa;- Mode PHPMailer&#xa;- Mode wp_mail natif&#xa;- Mode debug (log file)" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="50" y="300" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note2" value="Calcul automatique basé sur:&#xa;- Type produit&#xa;- Dimensions&#xa;- Matières&#xa;- Options sélectionnées" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="50" y="400" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note3" value="Sécurité:&#xa;- Sanitisation données&#xa;- Validation entrées&#xa;- Protection CSRF (à implémenter)" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="50" y="500" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

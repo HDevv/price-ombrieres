@@ -1,0 +1,273 @@
+<mxfile host="app.diagrams.net" modified="2025-08-13T15:37:38.000Z" agent="5.0" etag="drawio" version="22.1.16" type="device">
+  <diagram name="Navigation Diagram" id="navigation-diagram">
+    <mxGraphModel dx="1422" dy="754" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Diagramme de Navigation - Plugin Custom Price Widget" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Initial State -->
+        <mxCell id="initial" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="100" y="80" width="20" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- States -->
+        <mxCell id="pageWP" value="Page WordPress avec shortcode" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="200" y="70" width="160" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="formChiffrage" value="Formulaire de Chiffrage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="180" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="formTest" value="Formulaire de Test" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="280" y="180" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pageResults" value="Page de Résultats" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="190" y="320" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="panier" value="Panier WooCommerce" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="450" y="320" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="emailClient" value="Email Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="50" y="450" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="emailCommercial" value="Email Commercial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="200" y="450" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pageError" value="Page d'Erreur" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#ff6666;" vertex="1" parent="1">
+          <mxGeometry x="600" y="180" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Final State -->
+        <mxCell id="final" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="510" y="450" width="20" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="finalOuter" value="" style="ellipse;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="505" y="445" width="30" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Transitions -->
+        <!-- Initial to PageWP -->
+        <mxCell id="trans1" value="Visiteur accède à la page" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="initial" target="pageWP">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="120" y="90" as="sourcePoint" />
+            <mxPoint x="200" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- PageWP to Forms -->
+        <mxCell id="trans2" value="[widg_chiffrage] shortcode" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageWP" target="formChiffrage">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="250" y="110" as="sourcePoint" />
+            <mxPoint x="170" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans3" value="[widg_test] shortcode&#xa;(si activé)" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageWP" target="formTest">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="310" y="110" as="sourcePoint" />
+            <mxPoint x="350" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans4" value="[results_page] shortcode" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageWP" target="pageResults">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="280" y="110" as="sourcePoint" />
+            <mxPoint x="260" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Self-loops for configuration -->
+        <mxCell id="trans5" value="Configuration produit&#xa;(type, dimensions, matières)" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="120" y="180" as="sourcePoint" />
+            <mxPoint x="80" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="80" y="180" />
+              <mxPoint x="80" y="160" />
+              <mxPoint x="120" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans6" value="Saisie informations client" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="220" y="180" as="sourcePoint" />
+            <mxPoint x="260" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="180" />
+              <mxPoint x="260" y="160" />
+              <mxPoint x="220" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans7" value="Configuration produit test" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="330" y="180" as="sourcePoint" />
+            <mxPoint x="370" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="370" y="180" />
+              <mxPoint x="370" y="160" />
+              <mxPoint x="330" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans8" value="Saisie informations client" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="400" y="180" as="sourcePoint" />
+            <mxPoint x="440" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="440" y="180" />
+              <mxPoint x="440" y="160" />
+              <mxPoint x="400" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Forms to Results -->
+        <mxCell id="trans9" value="Soumission formulaire&#xa;(calcul prix automatique)" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="formChiffrage" target="pageResults">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="170" y="220" as="sourcePoint" />
+            <mxPoint x="230" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans10" value="Soumission formulaire test" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="formTest" target="pageResults">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="350" y="220" as="sourcePoint" />
+            <mxPoint x="290" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Results to Emails and Cart -->
+        <mxCell id="trans11" value="Envoi automatique&#xa;email devis client" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageResults" target="emailClient">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="220" y="360" as="sourcePoint" />
+            <mxPoint x="120" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans12" value="Envoi automatique&#xa;email notification commercial" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageResults" target="emailCommercial">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="260" y="360" as="sourcePoint" />
+            <mxPoint x="250" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans13" value="Ajout au panier&#xa;(optionnel)" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageResults" target="panier">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="330" y="340" as="sourcePoint" />
+            <mxPoint x="450" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans14" value="Retour formulaire&#xa;(nouveau chiffrage)" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageResults" target="pageWP">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="190" y="340" as="sourcePoint" />
+            <mxPoint x="280" y="110" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="150" y="340" />
+              <mxPoint x="150" y="130" />
+              <mxPoint x="200" y="130" />
+              <mxPoint x="200" y="110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Cart operations -->
+        <mxCell id="trans15" value="Modification quantités" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="520" y="320" as="sourcePoint" />
+            <mxPoint x="560" y="300" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="560" y="320" />
+              <mxPoint x="560" y="300" />
+              <mxPoint x="520" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans16" value="Finalisation commande" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="panier" target="final">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="520" y="360" as="sourcePoint" />
+            <mxPoint x="520" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Error handling -->
+        <mxCell id="trans17" value="Erreur validation&#xa;ou configuration" style="endArrow=block;html=1;rounded=0;strokeColor=#ff6666;" edge="1" parent="1" source="formChiffrage" target="pageError">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="240" y="200" as="sourcePoint" />
+            <mxPoint x="600" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans18" value="Erreur validation&#xa;ou configuration" style="endArrow=block;html=1;rounded=0;strokeColor=#ff6666;" edge="1" parent="1" source="formTest" target="pageError">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="420" y="200" as="sourcePoint" />
+            <mxPoint x="600" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans19" value="Erreur envoi email&#xa;ou ajout panier" style="endArrow=block;html=1;rounded=0;strokeColor=#ff6666;" edge="1" parent="1" source="pageResults" target="pageError">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="330" y="340" as="sourcePoint" />
+            <mxPoint x="600" y="220" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="500" y="340" />
+              <mxPoint x="500" y="260" />
+              <mxPoint x="600" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="trans20" value="Retour page principale" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="pageError" target="pageWP">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="600" y="180" as="sourcePoint" />
+            <mxPoint x="360" y="110" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="650" y="180" />
+              <mxPoint x="650" y="130" />
+              <mxPoint x="360" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Notes -->
+        <mxCell id="note1" value="Accessible uniquement si&#xa;$pageTestActive = true&#xa;dans env.php" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="450" y="120" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note2" value="Calcul automatique du prix&#xa;basé sur la configuration&#xa;produit sélectionnée" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="380" y="380" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note3" value="Template email-client.phtml&#xa;Contient devis détaillé" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="20" y="520" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note4" value="Template email-commercial.phtml&#xa;Notification nouvelle demande" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="170" y="520" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note5" value="Intégration WooCommerce&#xa;Produit personnalisé&#xa;avec prix calculé" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="620" y="320" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -2,7 +2,7 @@
 - se connecter à phpMyAdmin avec root sans mot de passe
 - l'utilisateur de la BDD est "root" et le mot de passe est ""
 - le nom de la BDD est "ombriere"
-- accès au wordpress : http://localhost/price-ombriere/wordpress/wp-admin/edit.php?post_type=page   
+- accès au wordpress : http://localhost/price-ombriere/wordpress  
 - accès à phpMyAdmin : http://localhost/phpmyadmin/ 
 - il reste à installer le plugin sur le site wordpress, 
 les fichiers locaux on déjà été transférés
