@@ -1,0 +1,229 @@
+<mxfile host="app.diagrams.net" modified="2025-08-27T09:27:12.000Z" agent="5.0" etag="drawio" version="22.1.16" type="device">
+  <diagram name="Component Diagram" id="component-diagram">
+    <mxGraphModel dx="1000" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Diagramme de Composants - Architecture Plugin" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- WordPress Core -->
+        <mxCell id="wpCore" value="&lt;&lt;component&gt;&gt;&#xa;WordPress Core" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- WooCommerce -->
+        <mxCell id="woocommerce" value="&lt;&lt;component&gt;&gt;&#xa;WooCommerce" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="80" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Plugin Principal -->
+        <mxCell id="mainPlugin" value="&lt;&lt;component&gt;&gt;&#xa;Custom Price Widget&#xa;Plugin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="450" y="80" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Interface Utilisateur -->
+        <mxCell id="uiComponent" value="&lt;&lt;component&gt;&gt;&#xa;Interface Utilisateur" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="200" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Moteur de Calcul -->
+        <mxCell id="calculationEngine" value="&lt;&lt;component&gt;&gt;&#xa;Moteur de Calcul" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="200" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Système Email -->
+        <mxCell id="emailSystem" value="&lt;&lt;component&gt;&gt;&#xa;Système Email" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="450" y="200" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Gestionnaire Templates -->
+        <mxCell id="templateManager" value="&lt;&lt;component&gt;&gt;&#xa;Gestionnaire Templates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="650" y="200" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Configuration -->
+        <mxCell id="configComponent" value="&lt;&lt;component&gt;&gt;&#xa;Configuration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="320" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Validation Données -->
+        <mxCell id="dataValidation" value="&lt;&lt;component&gt;&gt;&#xa;Validation Données" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="320" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Intégration WooCommerce -->
+        <mxCell id="wcIntegration" value="&lt;&lt;component&gt;&gt;&#xa;Intégration&#xa;WooCommerce" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="450" y="320" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Base de Données -->
+        <mxCell id="database" value="&lt;&lt;component&gt;&gt;&#xa;Base de Données&#xa;MySQL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="650" y="320" width="150" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Interfaces -->
+        <!-- IFormHandler -->
+        <mxCell id="iFormHandler" value="&lt;&lt;interface&gt;&gt;&#xa;IFormHandler" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ICalculator -->
+        <mxCell id="iCalculator" value="&lt;&lt;interface&gt;&gt;&#xa;ICalculator" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- IEmailSender -->
+        <mxCell id="iEmailSender" value="&lt;&lt;interface&gt;&gt;&#xa;IEmailSender" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ITemplateRenderer -->
+        <mxCell id="iTemplateRenderer" value="&lt;&lt;interface&gt;&gt;&#xa;ITemplateRenderer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- IWooCommerceAPI -->
+        <mxCell id="iWooCommerceAPI" value="&lt;&lt;interface&gt;&gt;&#xa;IWooCommerceAPI" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Relations Components -->
+        <!-- Plugin Principal vers composants -->
+        <mxCell id="rel1" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainPlugin" target="uiComponent">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="450" y="160" as="sourcePoint" />
+            <mxPoint x="200" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel2" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainPlugin" target="calculationEngine">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="500" y="160" as="sourcePoint" />
+            <mxPoint x="325" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel3" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainPlugin" target="emailSystem">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="525" y="160" as="sourcePoint" />
+            <mxPoint x="525" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel4" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="mainPlugin" target="templateManager">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="600" y="160" as="sourcePoint" />
+            <mxPoint x="725" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Relations vers WordPress et WooCommerce -->
+        <mxCell id="rel5" value="étend" style="endArrow=block;endFill=0;html=1;rounded=0;" edge="1" parent="1" source="mainPlugin" target="wpCore">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="450" y="120" as="sourcePoint" />
+            <mxPoint x="200" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel6" value="intègre" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="wcIntegration" target="woocommerce">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="525" y="320" as="sourcePoint" />
+            <mxPoint x="325" y="140" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="525" y="280" />
+              <mxPoint x="325" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Relations composants internes -->
+        <mxCell id="rel7" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="uiComponent" target="dataValidation">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="125" y="260" as="sourcePoint" />
+            <mxPoint x="325" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel8" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="calculationEngine" target="configComponent">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="250" y="260" as="sourcePoint" />
+            <mxPoint x="150" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel9" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="emailSystem" target="templateManager">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="600" y="230" as="sourcePoint" />
+            <mxPoint x="700" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel10" value="accède" style="endArrow=open;endFill=1;html=1;rounded=0;" edge="1" parent="1" source="configComponent" target="database">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="200" y="350" as="sourcePoint" />
+            <mxPoint x="650" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Relations interfaces -->
+        <mxCell id="rel11" value="implémente" style="endArrow=block;endFill=0;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="uiComponent" target="iFormHandler">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="125" y="260" as="sourcePoint" />
+            <mxPoint x="110" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel12" value="implémente" style="endArrow=block;endFill=0;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="calculationEngine" target="iCalculator">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="325" y="260" as="sourcePoint" />
+            <mxPoint x="260" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel13" value="implémente" style="endArrow=block;endFill=0;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="emailSystem" target="iEmailSender">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="525" y="260" as="sourcePoint" />
+            <mxPoint x="410" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel14" value="implémente" style="endArrow=block;endFill=0;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="templateManager" target="iTemplateRenderer">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="725" y="260" as="sourcePoint" />
+            <mxPoint x="560" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel15" value="implémente" style="endArrow=block;endFill=0;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="wcIntegration" target="iWooCommerceAPI">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="600" y="350" as="sourcePoint" />
+            <mxPoint x="710" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Légende -->
+        <mxCell id="legend" value="Légende:&#xa;━ Utilise/Accède&#xa;▷ Étend&#xa;┅▷ Implémente" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="50" y="520" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Couches architecturales -->
+        <mxCell id="presentationLayer" value="Couche Présentation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;strokeWidth=2;dashed=1;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="180" width="790" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="businessLayer" value="Couche Métier" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;strokeWidth=2;dashed=1;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="300" width="790" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="interfaceLayer" value="Couche Interfaces" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;strokeWidth=2;dashed=1;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="420" width="790" height="80" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

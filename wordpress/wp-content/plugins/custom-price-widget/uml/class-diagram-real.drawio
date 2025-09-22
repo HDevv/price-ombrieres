@@ -5,11 +5,6 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         
-        <!-- Stéréotypes UML -->
-        <mxCell id="stereotype_note" value="Stéréotypes utilisés:&#xa;«Main Plugin File» = Fichier principal&#xa;«Configuration» = Fichier de config&#xa;«Environment» = Variables d'environnement&#xa;«Library» = Bibliothèque externe" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
-          <mxGeometry x="50" y="250" width="200" height="120" as="geometry" />
-        </mxCell>
-        
         <!-- Title -->
         <mxCell id="title" value="Custom Price Widget Plugin - Architecture Réelle" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="400" y="20" width="600" height="30" as="geometry" />
@@ -117,136 +112,78 @@
           <mxGeometry x="10" y="40" width="180" height="70" as="geometry" />
         </mxCell>
         
-        <!-- Relations UML Standard -->
-        <!-- Dépendance: Plugin utilise WordPress Core -->
-        <mxCell id="rel1" value="" style="endArrow=open;endFill=0;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="mainPlugin" target="wpCore">
+        <!-- Relations -->
+        <mxCell id="rel1" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="mainPlugin" target="wpCore">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="300" y="200" as="sourcePoint" />
             <mxPoint x="250" y="150" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rel1_label" value="«uses»" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="220" y="180" width="50" height="20" as="geometry" />
-        </mxCell>
         
-        <!-- Agrégation: Plugin agrège Configuration -->
-        <mxCell id="rel2" value="" style="endArrow=diamondThin;endFill=0;html=1;rounded=0;strokeWidth=1;" edge="1" parent="1" source="mainPlugin" target="configFiles">
+        <mxCell id="rel2" value="includes" style="endArrow=open;endFill=1;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="mainPlugin" target="configFiles">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="620" y="200" as="sourcePoint" />
             <mxPoint x="680" y="150" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rel2_card1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="630" y="180" width="20" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="rel2_card2" value="2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="660" y="160" width="20" height="20" as="geometry" />
-        </mxCell>
         
-        <!-- Composition: Plugin compose Templates -->
-        <mxCell id="rel3" value="" style="endArrow=diamondThin;endFill=1;html=1;rounded=0;strokeWidth=1;" edge="1" parent="1" source="mainPlugin" target="templates">
+        <mxCell id="rel3" value="renders" style="endArrow=open;endFill=1;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="mainPlugin" target="templates">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="620" y="280" as="sourcePoint" />
             <mxPoint x="950" y="220" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rel3_card1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="630" y="250" width="20" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="rel3_card2" value="5" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="920" y="200" width="20" height="20" as="geometry" />
-        </mxCell>
         
-        <!-- Association: Plugin associé à WooCommerce -->
-        <mxCell id="rel4" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=1;" edge="1" parent="1" source="mainPlugin" target="woocommerce">
+        <mxCell id="rel4" value="integrates" style="endArrow=open;endFill=1;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="mainPlugin" target="woocommerce">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="460" y="480" as="sourcePoint" />
             <mxPoint x="460" y="520" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rel4_label" value="integrates" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="470" y="490" width="60" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="rel4_card1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="450" y="480" width="20" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="rel4_card2" value="0..1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="440" y="500" width="30" height="20" as="geometry" />
-        </mxCell>
         
-        <!-- Dépendance: Email System utilise PHPMailer -->
-        <mxCell id="rel5" value="" style="endArrow=open;endFill=0;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="emailSystem" target="dependencies">
+        <mxCell id="rel5" value="uses" style="endArrow=open;endFill=1;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="emailSystem" target="dependencies">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="620" y="340" as="sourcePoint" />
             <mxPoint x="680" y="340" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rel5_label" value="«uses»" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="630" y="320" width="50" height="20" as="geometry" />
+        
+        <!-- Data Flow -->
+        <mxCell id="dataFlowTitle" value="Flux de Données" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="700" width="150" height="30" as="geometry" />
         </mxCell>
         
-        <!-- Légende UML -->
-        <mxCell id="legendTitle" value="Légende des Relations UML" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="700" width="200" height="30" as="geometry" />
-        </mxCell>
-        
-        <!-- Dépendance -->
-        <mxCell id="legend_dep" value="Dépendance" style="endArrow=open;endFill=0;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1">
+        <mxCell id="flow1" value="1. Shortcode → Template" style="endArrow=block;html=1;rounded=0;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="50" y="740" as="sourcePoint" />
-            <mxPoint x="150" y="740" as="targetPoint" />
+            <mxPoint x="200" y="740" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         
-        <!-- Agrégation -->
-        <mxCell id="legend_agg" value="Agrégation" style="endArrow=diamondThin;endFill=0;html=1;rounded=0;strokeWidth=1;" edge="1" parent="1">
+        <mxCell id="flow2" value="2. Form Submit → Handler" style="endArrow=block;html=1;rounded=0;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="50" y="760" as="sourcePoint" />
-            <mxPoint x="150" y="760" as="targetPoint" />
+            <mxPoint x="200" y="760" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         
-        <!-- Composition -->
-        <mxCell id="legend_comp" value="Composition" style="endArrow=diamondThin;endFill=1;html=1;rounded=0;strokeWidth=1;" edge="1" parent="1">
+        <mxCell id="flow3" value="3. Handler → Email System" style="endArrow=block;html=1;rounded=0;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="50" y="780" as="sourcePoint" />
-            <mxPoint x="150" y="780" as="targetPoint" />
+            <mxPoint x="200" y="780" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         
-        <!-- Association -->
-        <mxCell id="legend_assoc" value="Association" style="endArrow=none;html=1;rounded=0;strokeWidth=1;" edge="1" parent="1">
+        <mxCell id="flow4" value="4. Results → WooCommerce" style="endArrow=block;html=1;rounded=0;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="50" y="800" as="sourcePoint" />
-            <mxPoint x="150" y="800" as="targetPoint" />
+            <mxPoint x="200" y="800" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        
-        <!-- Cardinalités -->
-        <mxCell id="cardinalites" value="Cardinalités:&#xa;1 = exactement un&#xa;0..1 = zéro ou un&#xa;* = zéro ou plusieurs&#xa;1..* = un ou plusieurs" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="300" y="720" width="150" height="100" as="geometry" />
         </mxCell>
         
         <!-- Security Note -->
         <mxCell id="securityNote" value="SÉCURITÉ&#xa;&#xa;✓ CSRF Protection (wp_nonce)&#xa;✓ Data Sanitization&#xa;✓ Access Control (!ABSPATH)&#xa;⚠ Debug mode en production" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="950" y="420" width="200" height="120" as="geometry" />
-        </mxCell>
-        
-        <!-- Relations internes au plugin -->
-        <!-- Shortcode Functions utilise Utility Functions -->
-        <mxCell id="internal_rel1" value="" style="endArrow=open;endFill=0;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="shortcodeFunctions" target="utilityFunctions">
-          <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="460" y="150" as="sourcePoint" />
-            <mxPoint x="460" y="340" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        
-        <!-- Form Handler utilise Email System -->
-        <mxCell id="internal_rel2" value="" style="endArrow=open;endFill=0;html=1;rounded=0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="formHandler" target="emailSystem">
-          <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="460" y="240" as="sourcePoint" />
-            <mxPoint x="460" y="250" as="targetPoint" />
-          </mxGeometry>
         </mxCell>
         
       </root>

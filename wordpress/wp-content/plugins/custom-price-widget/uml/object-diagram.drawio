@@ -1,0 +1,114 @@
+<mxfile host="app.diagrams.net" modified="2025-08-27T09:27:12.000Z" agent="5.0" etag="drawio" version="22.1.16" type="device">
+  <diagram name="Object Diagram" id="object-diagram">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Diagramme d'Objets - Instance d'Exécution" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Configuration Object -->
+        <mxCell id="configObj" value="config : Configuration&#xa;&#xa;host = 'localhost:3307'&#xa;debug = true&#xa;cial_email = 'commercial@example.com'&#xa;pageTestActive = true" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Product Object -->
+        <mxCell id="productObj" value="produit : Produit&#xa;&#xa;type = 'Pergola'&#xa;largeur = 4.5&#xa;hauteur = 3.0&#xa;matiere = 'Aluminium'&#xa;options = ['LED', 'Motorisation']&#xa;prix = 2850.00" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Client Object -->
+        <mxCell id="clientObj" value="client : Client&#xa;&#xa;nom = 'Dupont'&#xa;prenom = 'Jean'&#xa;email = 'jean.dupont@email.com'&#xa;telephone = '0123456789'&#xa;adresse = '123 Rue de la Paix'&#xa;ville = 'Paris'" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="80" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Email Client Object -->
+        <mxCell id="emailClientObj" value="emailClient : Email&#xa;&#xa;destinataire = 'jean.dupont@email.com'&#xa;sujet = 'Votre devis pergola'&#xa;template = 'email-client.phtml'&#xa;statut = 'envoyé'&#xa;dateEnvoi = '2025-08-27 11:30'" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="250" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Email Commercial Object -->
+        <mxCell id="emailCommercialObj" value="emailCommercial : Email&#xa;&#xa;destinataire = 'commercial@example.com'&#xa;sujet = 'Nouvelle demande devis'&#xa;template = 'email-commercial.phtml'&#xa;statut = 'envoyé'&#xa;dateEnvoi = '2025-08-27 11:30'" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="250" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- WooCommerce Product Object -->
+        <mxCell id="wcProductObj" value="wcProduit : WC_Product&#xa;&#xa;id = 1234&#xa;nom = 'Pergola Aluminium 4.5x3m'&#xa;prix = 2850.00&#xa;sku = 'PERG-ALU-450-300'&#xa;statut = 'publish'&#xa;meta = ['dimensions', 'options']" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="250" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Session Object -->
+        <mxCell id="sessionObj" value="session : Session&#xa;&#xa;formulaireId = 'widg_test_20250827'&#xa;etape = 'traitement'&#xa;donnees = {...}&#xa;timestamp = 1724755800&#xa;ip = '192.168.1.100'" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="775" y="80" width="175" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Template Object -->
+        <mxCell id="templateObj" value="template : Template&#xa;&#xa;fichier = 'widg_chiffrage.phtml'&#xa;variables = ['produit', 'client']&#xa;rendu = 'HTML généré'&#xa;cache = false" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="775" y="250" width="175" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Relations -->
+        <mxCell id="rel1" value="configure" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="configObj" target="productObj">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="250" y="130" as="sourcePoint" />
+            <mxPoint x="300" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel2" value="concerne" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="productObj" target="clientObj">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="500" y="140" as="sourcePoint" />
+            <mxPoint x="550" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel3" value="génère" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="productObj" target="wcProductObj">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="450" y="200" as="sourcePoint" />
+            <mxPoint x="600" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel4" value="envoie à" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="emailClientObj" target="clientObj">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="200" y="250" as="sourcePoint" />
+            <mxPoint x="550" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel5" value="utilise" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="templateObj" target="productObj">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="775" y="250" as="sourcePoint" />
+            <mxPoint x="500" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel6" value="stocke" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;" edge="1" parent="1" source="sessionObj" target="clientObj">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="775" y="130" as="sourcePoint" />
+            <mxPoint x="750" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Contexte d'exécution -->
+        <mxCell id="context" value="Contexte d'Exécution&#xa;&#xa;Date: 27/08/2025 11:30&#xa;Action: Soumission formulaire&#xa;Utilisateur: Jean Dupont&#xa;Produit: Pergola Aluminium&#xa;Statut: Traitement terminé" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="400" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- État système -->
+        <mxCell id="systemState" value="État Système&#xa;&#xa;Base de données: Connectée&#xa;Email: Fonctionnel&#xa;WooCommerce: Actif&#xa;Templates: Chargés&#xa;Debug: Activé" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="400" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Résultats -->
+        <mxCell id="results" value="Résultats&#xa;&#xa;Prix calculé: 2850€&#xa;Emails envoyés: 2&#xa;Produit WC créé: Oui&#xa;Erreurs: Aucune&#xa;Temps traitement: 1.2s" style="shape=note;whiteSpace=wrap;html=1;backgroundTip=1;darkOpacity=0.05;size=20;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="400" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

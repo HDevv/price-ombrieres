@@ -1,71 +1,128 @@
-# Diagrammes UML - Plugin Custom Price Widget
+# Documentation UML - Plugin Custom Price Widget
 
-Ce dossier contient les diagrammes UML du plugin custom-price-widget pour WordPress au format Draw.io.
+Ce dossier contient les diagrammes UML simplifiés du plugin WordPress **Custom Price Widget** pour le système de chiffrage d'ombrières.
 
-## Diagrammes disponibles
+## 📊 Diagrammes disponibles
 
-### 1. Diagramme de Cas d'Utilisation (`use-case-diagram.drawio`)
-- **Acteurs** : Visiteur, Client, Commercial, Administrateur WordPress
-- **Cas d'utilisation principaux** :
-  - Configuration et chiffrage de produits (Pergola, Rideau, Brise-Vue, Voile)
-  - Calcul automatique des prix
-  - Envoi d'emails (client + commercial)
-  - Intégration WooCommerce
-  - Administration du plugin
+### 1. Diagramme de Séquence Simplifié (`sequence-diagram.drawio`)
+- **Format** : Draw.io (éditable)
+- **Objectif** : Flux simplifié en 4 phases principales
+- **Phases** :
+  1. **Affichage** : Accès page → Formulaire HTML
+  2. **Configuration** : Saisie données produit
+  3. **Traitement** : Soumission → Calcul prix
+  4. **Emails** : Envoi devis client et notification commercial
 
-### 2. Diagramme de Séquence (`sequence-diagram.drawio`)
-- **Processus complet** : De l'affichage du formulaire à l'envoi des emails
-- **Interactions** : WordPress, Plugin, Templates, WooCommerce, Système Email
-- **Flux principal** :
-  1. Affichage formulaire via shortcode
-  2. Configuration produit par l'utilisateur
-  3. Traitement et validation des données
-  4. Calcul automatique du prix
-  5. Envoi dual des emails (client + commercial)
-  6. Ajout optionnel au panier WooCommerce
+### 2. Diagramme de Classes Simplifié (`class-diagram.drawio`)
+- **Format** : Draw.io (éditable)
+- **Objectif** : Architecture modulaire simplifiée
+- **Composants principaux** :
+  - **Plugin Principal** : Gestion shortcodes et traitement
+  - **Calculateur Prix** : Calcul automatique et matières
+  - **Système Email** : Envoi devis et notifications
+  - **Templates** : Formulaires et emails HTML
+  - **WooCommerce** : Intégration panier et produits
 
-### 3. Diagramme de Classes (`class-diagram.drawio`)
-- **Architecture modulaire** du plugin
-- **Classes principales** :
-  - `CustomPriceWidget` : Classe principale avec shortcodes
-  - `ConfigurationManager` : Gestion configuration et environnement
-  - `ProductCalculator` : Calculs de prix et logique métier
-  - `EmailManager` : Système d'envoi d'emails
-  - `WooCommerceIntegration` : Intégration panier et commandes
-  - `TemplateRenderer` : Rendu des templates
-  - `DataValidator` : Validation et sécurisation des données
+### 3. Diagramme d'Objets (`object-diagram.drawio`)
+- **Format** : Draw.io (éditable)
+- **Objectif** : Instance d'exécution concrète
+- **Exemple concret** :
+  - Configuration : localhost:3307, debug activé
+  - Produit : Pergola Aluminium 4.5x3m, 2850€
+  - Client : Jean Dupont, email envoyé
+  - Session : Traitement terminé avec succès
 
-### 4. Diagramme de Navigation (`navigation-diagram.drawio`)
-- **Flux utilisateur** à travers les différentes pages
-- **États et transitions** :
-  - Pages WordPress avec shortcodes
-  - Formulaires de chiffrage et test
-  - Page de résultats
-  - Intégration panier WooCommerce
-  - Gestion des erreurs
+### 4. Diagramme d'Activité (`activity-diagram.drawio`)
+- **Format** : Draw.io (éditable)
+- **Objectif** : Processus métier détaillé
+- **Flux complet** :
+  - Validation données avec boucle d'erreur
+  - Calcul prix automatique
+  - Envoi emails parallèle (fork/join)
+  - Choix ajout panier ou affichage résultats
 
-## Utilisation des diagrammes Draw.io
+### 5. Diagramme de Composants (`component-diagram.drawio`)
+- **Format** : Draw.io (éditable)
+- **Objectif** : Architecture technique par couches
+- **Couches** :
+  - **Présentation** : Interface utilisateur et templates
+  - **Métier** : Configuration, validation, intégration
+  - **Interfaces** : Contrats techniques (IFormHandler, ICalculator, etc.)
 
-Ces diagrammes Draw.io peuvent être visualisés et modifiés avec :
-- **Draw.io en ligne** : [app.diagrams.net](https://app.diagrams.net) (recommandé)
-- **VS Code** : Extension Draw.io Integration
-- **Desktop** : Application Draw.io Desktop
-- **Confluence/Jira** : Plugin Draw.io intégré
+### 6. Diagramme de Cas d'Utilisation (`use-case-diagram.drawio`)
+- **Format** : Draw.io (éditable)
+- **Acteurs** : Visiteur, Client, Commercial, Administrateur
+- **Cas d'usage** : Configuration produits, calcul prix, envoi emails, intégration WooCommerce
 
-## Architecture du Plugin
+### 7. Diagramme de Navigation (`navigation-diagram.drawio`)
+- **Format** : Draw.io (éditable)
+- **États** : Pages WordPress → Formulaires → Résultats → Panier/Emails
 
-Le plugin suit une architecture modulaire avec :
-- **Séparation des responsabilités** : Chaque classe a un rôle spécifique
-- **Configuration externalisée** : `config.php` et `env.php`
-- **Templates réutilisables** : Système de templates pour emails et formulaires
-- **Intégration WordPress/WooCommerce** : Hooks et filtres standards
-- **Sécurité** : Validation et sanitisation des données (à renforcer)
+## 🏗️ Architecture Simplifiée
 
-## Points d'amélioration identifiés
+### Flux Principal
+```
+Visiteur → Plugin → Calcul → Email → WooCommerce
+```
 
-D'après l'analyse de sécurité précédente :
-- ✅ Validation et sanitisation des données
-- ❌ **À implémenter** : Vérification CSRF avec wp_nonce
-- ❌ **À corriger** : Suppression des credentials en commentaires
-- ❌ **À désactiver** : Mode debug en production
-- ❌ **À améliorer** : Gestion d'erreurs plus robuste
+### Composants Essentiels
+- **Plugin Principal** : Point d'entrée et orchestration
+- **Calculateur** : Logique métier de pricing
+- **Email** : Communication client/commercial
+- **Templates** : Rendu HTML responsive
+- **WooCommerce** : Intégration e-commerce
+
+### Relations
+- **Plugin** utilise tous les autres composants
+- **WordPress** est étendu par le plugin
+- **Flux de données** : Formulaire → Prix → Email → Produit
+
+## 🔧 Utilisation des Diagrammes
+
+### Édition avec Draw.io
+1. Ouvrir [app.diagrams.net](https://app.diagrams.net)
+2. Charger le fichier `.drawio` souhaité
+3. Modifier selon les besoins
+4. Exporter en PNG/PDF pour documentation
+
+### Formats disponibles
+- **Draw.io** : Éditable, collaboratif
+- **Couleurs** : Code couleur par type de composant
+- **Légendes** : Explications des relations et flux
+
+## 📋 Avantages de la Simplification
+
+### Avant (Diagrammes complexes)
+- Trop de détails techniques
+- Difficile à comprendre pour les non-développeurs
+- Maintenance complexe
+
+### Après (Diagrammes simplifiés)
+- **Vue d'ensemble claire** : Focus sur l'essentiel
+- **Accessibilité** : Compréhensible par tous les intervenants
+- **Maintenance facile** : Format Draw.io standard
+- **Évolutivité** : Ajout facile de nouveaux éléments
+
+## 🎯 Cas d'Usage des Diagrammes
+
+### Pour les Développeurs
+- **Séquence** : Comprendre le flux d'exécution
+- **Classes** : Architecture et relations
+- **Composants** : Structure technique
+
+### Pour les Chefs de Projet
+- **Activité** : Processus métier
+- **Cas d'usage** : Fonctionnalités utilisateur
+- **Navigation** : Parcours utilisateur
+
+### Pour les Clients
+- **Objets** : Exemple concret d'utilisation
+- **Activité** : Processus de chiffrage
+- **Navigation** : Expérience utilisateur
+
+---
+
+**Format** : Draw.io (éditable)  
+**Version** : 2.0 - Simplifiée  
+**Dernière mise à jour** : 27 août 2025  
+**Compatibilité** : Tous navigateurs modernes
